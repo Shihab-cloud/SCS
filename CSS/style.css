@@ -1,0 +1,214 @@
+@import url('https://fonts.googleapis.com/css2?family=ADLaM+Display&display=swap');
+
+body, html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font-family: Arial, sans-serif;
+  overflow: hidden;
+}
+
+/* ---------------- Landing Intro ---------------- */
+
+.container {
+  width: 100%;
+  height: 100%;
+  background-image: url("/smart_cloud_system/img/background1.jpg");
+  background-size: cover;
+  background-position: center;
+  transition: background 1s ease-in-out;
+  position: relative;
+}
+
+.overlay {
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.welcome-text {
+  color: white;
+  font-size: 2.4em;
+  text-align: center;
+  animation: appearFadeLeft 3s ease forwards;
+}
+
+@keyframes appearFadeLeft {
+  0% {
+    opacity: 0;
+    transform: translateY(50px);
+  }
+  50% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(-100%);
+  }
+}
+
+.slide-left {
+  animation: bgSlideLeft 1s forwards;
+}
+
+@keyframes bgSlideLeft {
+  from {
+    background-position: center;
+  }
+  to {
+    background-position: left -100vw top;
+  }
+}
+
+/* ---------------- Intermediate Layout ---------------- */
+
+.final-layout-slanted {
+  display: flex;
+  width: 100%;
+  height: 100vh;
+  font-family: 'Times New Roman', serif;
+}
+
+.left-panel {
+  width: 40%;
+  background-image: url("/smart_cloud_system/img/background1.jpg");
+  background-size: cover;
+  background-position: center;
+}
+
+.right-panel {
+  width: 60%;
+  background-image: url("/smart_cloud_system/img/background2.png");
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  padding: 60px 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.title {
+  font-family: 'ADLaM Display', cursive;
+  font-size: 1.8em;
+  font-weight: bold;
+  color: #0e2e3d;
+  text-align: right;
+  margin-bottom: 60px;
+  line-height: 1.4;
+  transition: opacity 1s ease;
+}
+
+.features-box {
+  background-color: rgba(255, 255, 255, 0.7);
+  padding: 30px;
+  border-radius: 10px;
+  max-width: 500px;
+  margin: 0 auto;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  transition: opacity 1s ease;
+}
+
+.features-heading {
+  font-size: 1.4em;
+  font-weight: bold;
+  color: #4B2E2E;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.features-list {
+  font-size: 1.1em;
+  list-style-position: inside;
+  color: #333;
+  line-height: 1.6;
+  font-family: 'Times New Roman', serif;
+}
+
+/* ---------------- Final Clean Layout ---------------- */
+
+.final-layout-clean {
+  display: flex;
+  width: 100%;
+  height: 100vh;
+}
+
+.left-panel-final {
+  width: 40%;
+  background-image: url("/smart_cloud_system/img/background1.jpg");
+  background-size: cover;
+  background-position: center;
+}
+
+.right-panel-final {
+  width: 60%;
+  background-image: url("/smart_cloud_system/img/background2.png");
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+/* ---------------- Login Button ---------------- */
+
+.login-btn-final {
+  text-align: center;
+}
+
+.login-btn-final a {
+  padding: 14px 36px;
+  background-color: transparent;
+  color: #4B2E2E;
+  font-size: 18px;
+  border-radius: 6px;
+  text-decoration: none;
+  transition: 0.3s;
+  border: 2px solid #4B2E2E;
+  font-weight: bold;
+}
+
+.login-btn-final a:hover {
+  background-color: #4B2E2E;
+  color: white;
+}
+
+/* ---------------- Animations ---------------- */
+
+.hidden {
+  display: none;
+}
+
+.fly-in {
+  animation: flyIn 1.5s ease-out;
+}
+
+@keyframes flyIn {
+  0% {
+    opacity: 0;
+    transform: translateY(80px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-out {
+  opacity: 0 !important;
+  pointer-events: none;
+}
+
+.fade-in {
+  animation: fadeIn 2s ease forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
