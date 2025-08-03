@@ -19,7 +19,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $error = "Unknown user type.";
     }
 
-    if (!isset($error)) {
+    if (empty($error)) {
         $stmt->bind_param("s", $username);
         $stmt->execute();
         $result = $stmt->get_result();

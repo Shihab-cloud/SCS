@@ -9,37 +9,34 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $_SESSION['login_user'] = $username;
 
     // Check admin
-    $checkAdmin = $conn->prepare("SELECT * FROM Admins WHERE username = ?");
-    $checkAdmin->bind_param("s", $username);
-    $checkAdmin->execute();
-    $result = $checkAdmin->get_result();
-
+    $stmt = $conn->prepare("SELECT * FROM Admins WHERE username = ?");
+    $stmt->bind_param("s", $username);
+    $stmt->execute();
+    $result = $stmt->get_result();
     if ($result->num_rows === 1) {
-        $_SESSION['role'] = 'admin';
+        $_SESSION['role'] = 'admin';   // ✅ Set clearly
         header("Location: login_step2.php");
         exit();
     }
 
     // Check faculty
-    $checkFaculty = $conn->prepare("SELECT * FROM Faculty WHERE faculty_id = ?");
-    $checkFaculty->bind_param("s", $username);
-    $checkFaculty->execute();
-    $result = $checkFaculty->get_result();
-
+    $stmt = $conn->prepare("SELECT * FROM Faculty WHERE faculty_id = ?");
+    $stmt->bind_param("s", $username);
+    $stmt->execute();
+    $result = $stmt->get_result();
     if ($result->num_rows === 1) {
-        $_SESSION['role'] = 'faculty';
+        $_SESSION['role'] = 'faculty'; // ✅ Set clearly
         header("Location: login_step2.php");
         exit();
     }
 
     // Check student
-    $checkStudent = $conn->prepare("SELECT * FROM Students WHERE student_id = ?");
-    $checkStudent->bind_param("s", $username);
-    $checkStudent->execute();
-    $result = $checkStudent->get_result();
-
+    $stmt = $conn->prepare("SELECT * FROM Students WHERE student_id = ?");
+    $stmt->bind_param("s", $username);
+    $stmt->execute();
+    $result = $stmt->get_result();
     if ($result->num_rows === 1) {
-        $_SESSION['role'] = 'student';
+        $_SESSION['role'] = 'student'; // ✅ Set clearly
         header("Location: login_step2.php");
         exit();
     }
