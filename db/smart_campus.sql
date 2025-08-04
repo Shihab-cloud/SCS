@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 03, 2025 at 02:44 PM
+-- Generation Time: Aug 04, 2025 at 08:48 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -34,6 +34,13 @@ CREATE TABLE `admins` (
   `role` varchar(20) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `admins`
+--
+
+INSERT INTO `admins` (`admin_id`, `username`, `password`, `role`) VALUES
+(1, 'admin', 'admin123', 'admin');
+
 -- --------------------------------------------------------
 
 --
@@ -42,7 +49,7 @@ CREATE TABLE `admins` (
 
 CREATE TABLE `applications` (
   `application_id` int(11) NOT NULL,
-  `student_id` int(11) DEFAULT NULL,
+  `student_id` varchar(20) DEFAULT NULL,
   `status` varchar(20) DEFAULT NULL,
   `submission_date` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -54,8 +61,8 @@ CREATE TABLE `applications` (
 --
 
 CREATE TABLE `attendance` (
-  `student_id` int(11) NOT NULL,
-  `course_id` varchar(10) NOT NULL,
+  `student_id` varchar(20) NOT NULL,
+  `course_id` varchar(20) NOT NULL,
   `date` date NOT NULL,
   `status` varchar(10) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -67,9 +74,9 @@ CREATE TABLE `attendance` (
 --
 
 CREATE TABLE `class_schedules` (
-  `schedule_id` int(11) NOT NULL,
-  `course_id` varchar(10) DEFAULT NULL,
-  `faculty_id` varchar(10) DEFAULT NULL,
+  `schedule_id` varchar(20) NOT NULL,
+  `course_id` varchar(20) DEFAULT NULL,
+  `faculty_id` varchar(20) DEFAULT NULL,
   `day` varchar(20) DEFAULT NULL,
   `start_time` time DEFAULT NULL,
   `end_time` time DEFAULT NULL,
@@ -83,7 +90,7 @@ CREATE TABLE `class_schedules` (
 --
 
 CREATE TABLE `courses` (
-  `course_id` varchar(10) NOT NULL,
+  `course_id` varchar(20) NOT NULL,
   `course_name` varchar(100) DEFAULT NULL,
   `description` text DEFAULT NULL,
   `credits` int(11) DEFAULT NULL
@@ -96,11 +103,20 @@ CREATE TABLE `courses` (
 --
 
 CREATE TABLE `departments` (
-  `department_id` int(11) NOT NULL,
+  `department_id` varchar(20) NOT NULL,
   `department_name` varchar(100) DEFAULT NULL,
   `department_head` varchar(100) DEFAULT NULL,
   `contact_email` varchar(100) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `departments`
+--
+
+INSERT INTO `departments` (`department_id`, `department_name`, `department_head`, `contact_email`) VALUES
+('CE', 'Civil Engeneering', 'Tom Hardy', 'ce@scs.edu'),
+('ECE', 'Electrical & Computer Engeneering', 'John Wick', 'ece@scs.edu'),
+('IPE', 'Industrial Production Engeneering', 'David Watson', 'ipe@scs.edu');
 
 -- --------------------------------------------------------
 
@@ -110,8 +126,8 @@ CREATE TABLE `departments` (
 
 CREATE TABLE `enrollments` (
   `enrollment_id` int(11) NOT NULL,
-  `student_id` int(11) DEFAULT NULL,
-  `course_id` varchar(10) DEFAULT NULL,
+  `student_id` varchar(20) DEFAULT NULL,
+  `course_id` varchar(20) DEFAULT NULL,
   `semester` varchar(10) DEFAULT NULL,
   `grade` varchar(5) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -123,14 +139,22 @@ CREATE TABLE `enrollments` (
 --
 
 CREATE TABLE `faculty` (
-  `faculty_id` varchar(10) NOT NULL,
+  `faculty_id` varchar(20) NOT NULL,
   `first_name` varchar(50) DEFAULT NULL,
   `last_name` varchar(50) DEFAULT NULL,
   `email` varchar(100) DEFAULT NULL,
-  `department_id` int(11) DEFAULT NULL,
+  `department_id` varchar(20) DEFAULT NULL,
   `designation` varchar(50) DEFAULT NULL,
-  `joining_date` date DEFAULT NULL
+  `joining_date` date DEFAULT NULL,
+  `password` varchar(20) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `faculty`
+--
+
+INSERT INTO `faculty` (`faculty_id`, `first_name`, `last_name`, `email`, `department_id`, `designation`, `joining_date`, `password`) VALUES
+('JW', NULL, NULL, NULL, NULL, NULL, NULL, 'faculty123');
 
 -- --------------------------------------------------------
 
@@ -155,7 +179,7 @@ CREATE TABLE `notices` (
 
 CREATE TABLE `payments` (
   `payment_id` int(11) NOT NULL,
-  `student_id` int(11) DEFAULT NULL,
+  `student_id` varchar(20) DEFAULT NULL,
   `amount` decimal(10,2) DEFAULT NULL,
   `payment_date` date DEFAULT NULL,
   `payment_method` varchar(20) DEFAULT NULL,
@@ -169,8 +193,8 @@ CREATE TABLE `payments` (
 --
 
 CREATE TABLE `results` (
-  `student_id` int(11) NOT NULL,
-  `course_id` varchar(10) NOT NULL,
+  `student_id` varchar(20) NOT NULL,
+  `course_id` varchar(20) NOT NULL,
   `semester` varchar(10) NOT NULL,
   `marks_obtained` decimal(5,2) DEFAULT NULL,
   `grade` varchar(5) DEFAULT NULL
@@ -183,13 +207,20 @@ CREATE TABLE `results` (
 --
 
 CREATE TABLE `students` (
-  `student_id` int(11) NOT NULL,
+  `student_id` varchar(20) NOT NULL,
   `first_name` varchar(50) DEFAULT NULL,
   `last_name` varchar(50) DEFAULT NULL,
   `email` varchar(100) DEFAULT NULL,
   `password` varchar(255) DEFAULT NULL,
   `date_of_birth` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `students`
+--
+
+INSERT INTO `students` (`student_id`, `first_name`, `last_name`, `email`, `password`, `date_of_birth`) VALUES
+('231872042', NULL, NULL, NULL, 'student123', NULL);
 
 --
 -- Indexes for dumped tables
@@ -287,25 +318,13 @@ ALTER TABLE `students`
 -- AUTO_INCREMENT for table `admins`
 --
 ALTER TABLE `admins`
-  MODIFY `admin_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `admin_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `applications`
 --
 ALTER TABLE `applications`
   MODIFY `application_id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `class_schedules`
---
-ALTER TABLE `class_schedules`
-  MODIFY `schedule_id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `departments`
---
-ALTER TABLE `departments`
-  MODIFY `department_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `enrollments`
@@ -324,12 +343,6 @@ ALTER TABLE `notices`
 --
 ALTER TABLE `payments`
   MODIFY `payment_id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `students`
---
-ALTER TABLE `students`
-  MODIFY `student_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- Constraints for dumped tables
