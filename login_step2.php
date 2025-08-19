@@ -24,20 +24,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt->execute();
         $result = $stmt->get_result();
         $user = $result->fetch_assoc();
+        $APP_BASE = '/smart_cloud_system';
 
         if ($user && $password === $user['password']) {
             // redirect to portal
-            if ($role === 'admin') {
-                header("Location: admin_dashboard.php");
-            } elseif ($role === 'faculty') {
-                header("Location: faculty_dashboard.php");
-            } else {
-                header("Location: student_dashboard.php");
-            }
-            exit();
+          if ($role === 'admin') {
+            header("Location: {$APP_BASE}/admin_dashboard.php");
+          } elseif ($role === 'faculty') {
+            header("Location: {$APP_BASE}/faculty/dashboard.php");  // <-- new path
+          } else { // student
+            header("Location: {$APP_BASE}/student_dashboard.php");
+          }
+          exit();
         } else {
             $error = "Incorrect password.";
-        }
+          }
     }
 }
 ?>

@@ -1,0 +1,1 @@
+<?php header("Location: /smart_cloud_system/faculty/dashboard.php"); exit();

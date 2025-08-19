@@ -1,0 +1,59 @@
+/* Font & colors */
+* { box-sizing: border-box; }
+body { margin:0; font-family: "Times New Roman", serif; color:#3d2c23; }
+a { color:#6F4E37; text-decoration:none; }
+a:hover { text-decoration:underline; }
+
+.layout { display:flex; min-height:100vh; background:#f8f4f0; }
+
+/* Sidebar */
+.sidebar {
+  width: 250px; background:#f0e4db; border-right:1px solid #dcc8ba;
+  padding:16px; position:sticky; top:0; height:100vh;
+}
+.sidebar .brand { font-weight:bold; margin-bottom:12px; color:#4B2E2E; }
+.sidebar-toggle { display:inline-block; margin:8px 0 16px; background:#6F4E37; color:#fff; border:none; padding:6px 10px; border-radius:4px; cursor:pointer; }
+.sidebar ul { list-style:none; padding:0; margin:0; }
+.sidebar li { margin:10px 0; }
+.sidebar a { display:block; padding:8px 10px; border-radius:6px; }
+.sidebar a.active, .sidebar a:hover { background:#e9dbcf; }
+.sidebar-footer { margin-top:auto; font-size:14px; }
+.sidebar-footer .logout { display:inline-block; margin-top:8px; }
+
+/* Collapsed */
+.sidebar.collapsed { width:60px; }
+.sidebar.collapsed .brand, .sidebar.collapsed .sidebar-footer .me { display:none; }
+.sidebar.collapsed a { text-align:center; }
+
+/* Content */
+.content { flex:1; padding:24px; }
+
+/* Cards, tables, forms */
+.card {
+  background:#fffaf5; border:1px solid #e6d8cc; border-radius:10px; padding:16px; margin-bottom:16px;
+  box-shadow:0 2px 8px rgba(0,0,0,.05);
+}
+.card h2 { margin:0 0 12px; color:#4B2E2E; font-size:20px; }
+
+.table { width:100%; border-collapse:collapse; background:#fff; }
+.table th, .table td { border:1px solid #e6d8cc; padding:10px; text-align:left; }
+.table th { background:#f3e7dd; color:#4B2E2E; }
+
+.btn { display:inline-block; padding:8px 14px; border-radius:6px; background:#6F4E37; color:#fff; border:none; cursor:pointer; }
+.btn:hover { background:#5c3d2e; }
+.btn-outline { background:transparent; color:#6F4E37; border:2px solid #6F4E37; }
+.btn-outline:hover { background:#6F4E37; color:#fff; }
+
+.input, select, textarea {
+  width:100%; padding:10px; border:1px solid #b9a896; border-radius:6px; background:#fff;
+  font-family:"Times New Roman", serif; margin:6px 0 12px;
+}
+
+.row { display:flex; gap:16px; flex-wrap:wrap; }
+.col-6 { flex:0 0 50%; }
+.col-4 { flex:0 0 33.33%; }
+.col-3 { flex:0 0 25%; }
+
+.helper { font-size:13px; color:#7a5d4e; }
+.center { text-align:center; }
+.right { text-align:right; }
