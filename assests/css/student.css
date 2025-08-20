@@ -1,0 +1,130 @@
+/* General Body */
+body {
+  font-family: 'Times New Roman', serif;
+  margin: 0;
+  padding: 0;
+  background: linear-gradient(to right, #a1887f, #d7ccc8); /* soft brown gradient */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+.layout {
+  display: flex;
+  width: 100%;
+}
+
+.sidebar {
+  width: 250px;
+  background-color: #fffaf5;
+  padding: 20px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+}
+
+.sidebar .brand {
+  font-size: 22px;
+  font-weight: bold;
+  color: #4b2e2e;
+}
+
+.sidebar a {
+  color: #5c3a21;
+  font-size: 16px;
+  text-decoration: none;
+  display: block;
+  margin: 10px 0;
+}
+
+.sidebar a:hover {
+  color: #A0522D; /* Darker brown */
+}
+
+.sidebar-footer {
+  margin-top: 30px;
+  font-size: 14px;
+  text-align: center;
+}
+
+.sidebar-footer .me {
+  margin-bottom: 10px;
+}
+
+.sidebar-footer .logout {
+  color: #A0522D;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.sidebar-footer .logout:hover {
+  text-decoration: underline;
+}
+
+.content {
+  flex-grow: 1;
+  padding: 20px;
+  background-color: #fffaf5;
+  border-radius: 10px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+}
+
+.card {
+  background-color: #fff;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+}
+
+.card h2 {
+  font-size: 20px;
+  color: #4b2e2e;
+}
+
+.card table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.card table th,
+.card table td {
+  padding: 8px;
+  text-align: left;
+}
+
+.card table th {
+  background-color: #A0522D;
+  color: white;
+}
+
+.card table td {
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+}
+
+.card table tr:hover {
+  background-color: #f1f1f1;
+}
+
+button {
+  background-color: #5c3d2e;
+  color: white;
+  border: none;
+  padding: 10px 25px;
+  width: 100%;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+button:hover {
+  background-color: #3e2618;
+}
+
+footer {
+  text-align: center;
+  font-size: 14px;
+  margin-top: 20px;
+}

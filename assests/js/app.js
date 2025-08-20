@@ -1,5 +1,8 @@
 // /assets/js/app.js
 document.addEventListener('DOMContentLoaded', () => {
+  // Get the role from PHP session (which was set dynamically in header.php)
+  const userRole = '<?php echo $_SESSION["role"]; ?>';  // Outputs 'faculty', 'student', or 'admin'
+
   // ===== Sidebar toggle with remember state =====
   const sidebar = document.querySelector('.sidebar');
   const toggle  = document.querySelector('[data-toggle="sidebar"]');
@@ -49,18 +52,34 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // ===== Attendance helpers (optional) =====
-  const table = document.querySelector('[data-table="attendance"]');
-  const allP  = document.querySelector('[data-action="mark-all-present"]');
-  const allA  = document.querySelector('[data-action="mark-all-absent"]');
+  // ===== Attendance helpers (faculty-specific) =====
+  if (userRole === 'faculty') {
+    const table = document.querySelector('[data-table="attendance"]');
+    const allP  = document.querySelector('[data-action="mark-all-present"]');
+    const allA  = document.querySelector('[data-action="mark-all-absent"]');
 
-  function setAll(status) {
-    if (!table) return;
-    table.querySelectorAll('select[name^="status["], input[name^="status["]').forEach(el => {
-      if (el.tagName === 'SELECT') el.value = status;
-      if (el.type === 'checkbox') el.checked = (status === 'P');
-    });
+    function setAll(status) {
+      if (!table) return;
+      table.querySelectorAll('select[name^="status["], input[name^="status["]').forEach(el => {
+        if (el.tagName === 'SELECT') el.value = status;
+        if (el.type === 'checkbox') el.checked = (status === 'P');
+      });
+    }
+    allP?.addEventListener('click', () => setAll('P'));
+    allA?.addEventListener('click', () => setAll('A'));
   }
-  allP?.addEventListener('click', () => setAll('P'));
-  allA?.addEventListener('click', () => setAll('A'));
+
+  // ===== Student-specific helpers =====
+  if (userRole === 'student') {
+    // Logic for student-specific interactions, e.g., viewing grades, etc.
+    console.log('Student dashboard loaded');
+    // You can add more functions like updating grades, viewing notices, etc.
+  }
+
+  // ===== Admin-specific helpers (if applicable) =====
+  if (userRole === 'admin') {
+    // Logic for admin-specific interactions (e.g., managing faculty or students)
+    console.log('Admin dashboard loaded');
+  }
+
 });
