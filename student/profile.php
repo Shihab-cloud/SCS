@@ -1,55 +1,72 @@
 <?php
-require_once __DIR__ . '/../includes/header_student.php';
-include __DIR__ . '/../includes/sidebar_student.php';
-require_once __DIR__ . '/../db/config.php';
+session_start();
+require_once __DIR__ . '/../db/config.php';  // Include DB connection
 
 $student_id = $_SESSION['login_user'];  // Get student ID from session
 $error = "";
+$success = "";
 
+// Get the student's current profile info
+$stmt = $conn->prepare("SELECT first_name, last_name, email FROM Students WHERE student_id = ?");
+$stmt->bind_param("s", $student_id);
+$stmt->execute();
+$result = $stmt->get_result();
+$user = $result->fetch_assoc();
+
+// Handle profile update on form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $new_email = $_POST['email'];
-    $new_password = $_POST['password'];
-    $current_password = $_POST['current_password'];
+    $new_first_name = $_POST['first_name'];
+    $new_last_name = $_POST['last_name'];
 
-    // Check if current password is correct
-    $stmt = $conn->prepare("SELECT password FROM Students WHERE student_id = ?");
-    $stmt->bind_param("s", $student_id);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    $user = $result->fetch_assoc();
+    // Update the profile information
+    $update_stmt = $conn->prepare("UPDATE Students SET first_name = ?, last_name = ?, email = ? WHERE student_id = ?");
+    $update_stmt->bind_param("ssss", $new_first_name, $new_last_name, $new_email, $student_id);
 
-    if ($user && password_verify($current_password, $user['password'])) {
-        // Update email and password
-        $stmt = $conn->prepare("UPDATE Students SET email = ?, password = ? WHERE student_id = ?");
-        $hashed_password = password_hash($new_password, PASSWORD_DEFAULT);
-        $stmt->bind_param("sss", $new_email, $hashed_password, $student_id);
-        if ($stmt->execute()) {
-            $success = "Profile updated successfully.";
-        } else {
-            $error = "Failed to update profile.";
-        }
+    if ($update_stmt->execute()) {
+        $success = "Profile updated successfully!";
     } else {
-        $error = "Incorrect current password.";
+        $error = "Failed to update profile. Please try again.";
     }
 }
 ?>
 
-<form method="POST">
-  <label for="email">Email</label>
-  <input type="email" name="email" value="<?php echo htmlspecialchars($user['email']); ?>" required />
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Profile | SCS</title>
+    <link rel="stylesheet" href="/smart_cloud_system/assests/css/student.css" />
+</head>
+<body>
+  <div class="layout">
+    <?php include __DIR__ . '/../includes/sidebar_student.php'; ?>
+    
+    <main class="content">
+      <div class="card">
+        <h2>Profile</h2>
+        <form method="POST">
+            <label for="first_name">First Name</label>
+            <input type="text" name="first_name" value="<?php echo htmlspecialchars($user['first_name']); ?>" required />
 
-  <label for="password">New Password</label>
-  <input type="password" name="password" placeholder="Enter new password" />
+            <label for="last_name">Last Name</label>
+            <input type="text" name="last_name" value="<?php echo htmlspecialchars($user['last_name']); ?>" required />
 
-  <label for="current_password">Current Password</label>
-  <input type="password" name="current_password" placeholder="Enter current password" required />
+            <label for="email">Email</label>
+            <input type="email" name="email" value="<?php echo htmlspecialchars($user['email']); ?>" required />
 
-  <button type="submit">Save Changes</button>
-</form>
+            <button type="submit">Update Profile</button>
+        </form>
 
-<?php if ($error): ?>
-  <p class="error"><?php echo $error; ?></p>
-<?php endif; ?>
-<?php if (isset($success)): ?>
-  <p class="success"><?php echo $success; ?></p>
-<?php endif; ?>
+        <?php if ($error): ?>
+          <p class="error"><?php echo $error; ?></p>
+        <?php endif; ?>
+        
+        <?php if ($success): ?>
+          <p class="success"><?php echo $success; ?></p>
+        <?php endif; ?>
+      </div>
+    </main>
+  </div>
+</body>
+</html>

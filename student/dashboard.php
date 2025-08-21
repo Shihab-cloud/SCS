@@ -5,18 +5,12 @@ require_once __DIR__ . '/../db/config.php';
 
 $student_id = $_SESSION['login_user'];  // Logged-in student ID
 
-// Get the student's courses and their corresponding faculty members
-$stmt = $conn->prepare("
-  SELECT c.course_id, c.course_name, f.first_name AS instructor
-  FROM Enrollments e
-  JOIN Courses c ON c.course_id = e.course_id
-  JOIN Faculty_Courses fc ON fc.course_id = c.course_id
-  JOIN Faculty f ON f.faculty_id = fc.faculty_id
-  WHERE e.student_id = ?
-");
+// Get the student's full name (first and last name)
+$stmt = $conn->prepare("SELECT first_name, last_name FROM Students WHERE student_id = ?");
 $stmt->bind_param("s", $student_id);
 $stmt->execute();
-$courses_result = $stmt->get_result();
+$student_result = $stmt->get_result();
+$student = $student_result->fetch_assoc();
 
 // Get recent notices for student
 $notices = $conn->prepare("SELECT title, posted_date FROM Notices WHERE target_audience = 'ALL' OR target_audience LIKE ? ORDER BY posted_date DESC LIMIT 5");
@@ -26,17 +20,7 @@ $notices_result = $notices->get_result();
 ?>
 
 <div class="card">
-  <h2>My Courses</h2>
-  <table class="table">
-    <tr><th>Course</th><th>Name</th><th>Instructor</th></tr>
-    <?php while ($course = $courses_result->fetch_assoc()): ?>
-    <tr>
-      <td><?php echo htmlspecialchars($course['course_id']); ?></td>
-      <td><?php echo htmlspecialchars($course['course_name']); ?></td>
-      <td><?php echo htmlspecialchars($course['instructor']); ?></td>
-    </tr>
-    <?php endwhile; ?>
-  </table>
+  <h2>Welcome <?php echo htmlspecialchars($student['first_name']) . ' ' . htmlspecialchars($student['last_name']); ?>!</h2>
 </div>
 
 <div class="card">

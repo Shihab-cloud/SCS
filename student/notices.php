@@ -22,9 +22,9 @@ while ($course = $courses_result->fetch_assoc()) {
 
 $course_ids_str = implode("','", $course_ids);  // for SQL IN clause
 
-// Get notices for the student's courses
+// Get notices related to student courses
 $notices_query = $conn->prepare("
-  SELECT title, description, posted_date
+  SELECT title, description, posted_date, target_audience
   FROM Notices
   WHERE target_audience = 'ALL' OR target_audience IN ('$course_ids_str')
   ORDER BY posted_date DESC
@@ -39,9 +39,9 @@ $notices_result = $notices_query->get_result();
     <tr><th>Title</th><th>Date</th><th>Target</th></tr>
     <?php while ($notice = $notices_result->fetch_assoc()): ?>
     <tr>
-      <td><?php echo htmlspecialchars($notice['title']); ?></td>
-      <td><?php echo htmlspecialchars($notice['posted_date']); ?></td>
-      <td><?php echo htmlspecialchars($notice['target_audience']); ?></td>
+        <td><?php echo htmlspecialchars($notice['title']); ?></td>
+        <td><?php echo htmlspecialchars($notice['posted_date']); ?></td>
+        <td><?php echo htmlspecialchars($notice['target_audience']); ?></td> <!-- Display the target audience -->
     </tr>
     <?php endwhile; ?>
   </table>

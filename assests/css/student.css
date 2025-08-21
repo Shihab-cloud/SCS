@@ -1,4 +1,8 @@
 /* General Body */
+* {
+  box-sizing: border-box;
+}
+
 body {
   font-family: 'Times New Roman', serif;
   margin: 0;
@@ -15,6 +19,7 @@ body {
   width: 100%;
 }
 
+/* Sidebar */
 .sidebar {
   width: 250px;
   background-color: #fffaf5;
@@ -60,14 +65,30 @@ body {
   text-decoration: underline;
 }
 
+/* Collapsed Sidebar */
+.sidebar.collapsed {
+  width: 60px;
+}
+
+.sidebar.collapsed .brand,
+.sidebar.collapsed .sidebar-footer .me {
+  display: none;
+}
+
+.sidebar.collapsed a {
+  text-align: center;
+}
+
+/* Content Area */
 .content {
   flex-grow: 1;
-  padding: 20px;
+  padding: 24px;
   background-color: #fffaf5;
   border-radius: 10px;
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
 }
 
+/* Cards */
 .card {
   background-color: #fff;
   padding: 20px;
@@ -77,54 +98,159 @@ body {
 }
 
 .card h2 {
-  font-size: 20px;
+  font-size: 22px;
   color: #4b2e2e;
 }
 
-.card table {
+/* Table Styles */
+.table {
   width: 100%;
   border-collapse: collapse;
+  background-color: #fff;
 }
 
-.card table th,
-.card table td {
-  padding: 8px;
+.table th, .table td {
+  padding: 10px;
   text-align: left;
 }
 
-.card table th {
+.table th {
   background-color: #A0522D;
   color: white;
 }
 
-.card table td {
+.table td {
   background-color: #f9f9f9;
   border: 1px solid #ddd;
 }
 
-.card table tr:hover {
+.table tr:hover {
   background-color: #f1f1f1;
 }
 
-button {
+/* Form Styles */
+form {
+  display: flex;
+  flex-direction: column;
+  margin-top: 20px;
+  padding: 20px; /* Added padding for better spacing */
+}
+
+form label {
+  margin-bottom: 5px;
+  font-size: 16px;
+  font-weight: bold;
+  color: #5c3a21;
+}
+
+form input, form select, form textarea {
+  padding: 12px;
+  margin-bottom: 20px;  /* Added margin to separate the fields */
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+form button {
   background-color: #5c3d2e;
   color: white;
   border: none;
-  padding: 10px 25px;
-  width: 100%;
+  padding: 12px;
   font-size: 16px;
-  font-weight: bold;
-  border-radius: 5px;
   cursor: pointer;
+  border-radius: 5px;
   transition: 0.3s;
+  margin-top: 10px;  /* Added margin to separate the button */
+  width: 100%; /* Make the button span full width */
 }
 
-button:hover {
+form button:hover {
   background-color: #3e2618;
 }
 
+/* Button styles to match your brown theme */
+.btn {
+  display: inline-block;
+  background: #5c3d2e;
+  color: #fff;
+  text-align: center;
+  text-decoration: none;
+  border: none;
+  border-radius: 6px;
+  padding: 12px 18px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background .2s ease;
+}
+.btn:hover { background: #3e2618; color: #fff; text-decoration: none; }
+
+.btn-block { display: block; width: 20%; }
+.btn-lg    { padding: 14px 20px; font-size: 16px; }
+
+/* center a single action button inside a card */
+.card .btn-row{
+  display:flex;
+  justify-content:center;   /* horizontal centering  */
+  align-items:center;
+}
+
+.card .btn-row .btn{
+  min-width: 320px;         /* optional: give it a nice width */
+}
+
+/* Make it full width on very small screens (optional) */
+@media (max-width: 480px){
+  .card .btn-row .btn{ width:30%; }
+}
+
+/* Error and Success Messages */
+.error {
+  color: red;
+  margin-top: 10px;
+}
+
+.success {
+  color: green;
+  margin-top: 10px;
+}
+
+/* Footer */
 footer {
   text-align: center;
   font-size: 14px;
   margin-top: 20px;
+}
+
+/* Flexbox Grid */
+.row {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.col-6 {
+  flex: 0 0 50%;
+}
+
+.col-4 {
+  flex: 0 0 33.33%;
+}
+
+.col-3 {
+  flex: 0 0 25%;
+}
+
+/* Helper Classes */
+.helper {
+  font-size: 13px;
+  color: #7a5d4e;
+}
+
+.center {
+  text-align: center;
+}
+
+.right {
+  text-align: right;
 }

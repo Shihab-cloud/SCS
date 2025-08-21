@@ -11,8 +11,8 @@
     <li><a href="/smart_cloud_system/student/settings.php">Settings</a></li>
   </ul>
   <div class="sidebar-footer">
-    <div class="me">👤 <?php echo htmlspecialchars($STUDENT_ID); ?></div>
-    <a class="logout" href="/smart_cloud_system/login_step1.php">Logout</a>
+        <div class="me">👤 <?php echo htmlspecialchars($_SESSION['login_user']); ?></div>
+        <a class="logout" href="/smart_cloud_system/login_step1.php">Logout</a>
   </div>
 </div>
 <main class="content">
