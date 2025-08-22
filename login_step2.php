@@ -29,7 +29,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if ($user && $password === $user['password']) {
             // redirect to portal
           if ($role === 'admin') {
-            header("Location: {$APP_BASE}/admin_dashboard.php");
+            header("Location: {$APP_BASE}/admin/dashboard.php");
           } elseif ($role === 'faculty') {
             header("Location: {$APP_BASE}/faculty/dashboard.php");  // <-- new path
           } else { // student
