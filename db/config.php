@@ -1,8 +1,8 @@
 <?php
 $host = "localhost";
-$user = "root";             // Default for XAMPP
-$pass = "";                 // Default is empty
-$dbname = "smart_campus";   // Use the name from your .sql file
+$user = "root";             
+$pass = "";                 
+$dbname = "smart_campus";   
 
 $conn = new mysqli($host, $user, $pass, $dbname);
 

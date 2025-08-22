@@ -161,14 +161,14 @@ form button {
   border-radius: 5px;
   transition: 0.3s;
   margin-top: 10px;  /* Added margin to separate the button */
-  width: 100%; /* Make the button span full width */
+  width: 100%;
 }
 
 form button:hover {
   background-color: #3e2618;
 }
 
-/* Button styles to match your brown theme */
+/* Button styles*/
 .btn {
   display: inline-block;
   background: #5c3d2e;
@@ -188,7 +188,7 @@ form button:hover {
 .btn-block { display: block; width: 20%; }
 .btn-lg    { padding: 14px 20px; font-size: 16px; }
 
-/* center a single action button inside a card */
+/* centered a single action button inside a card */
 .card .btn-row{
   display:flex;
   justify-content:center;   /* horizontal centering  */
@@ -196,10 +196,10 @@ form button:hover {
 }
 
 .card .btn-row .btn{
-  min-width: 320px;         /* optional: give it a nice width */
+  min-width: 320px;         
 }
 
-/* Make it full width on very small screens (optional) */
+
 @media (max-width: 480px){
   .card .btn-row .btn{ width:30%; }
 }

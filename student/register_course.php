@@ -3,13 +3,11 @@
 if (session_status() === PHP_SESSION_NONE) session_start();
 require_once __DIR__ . '/../db/config.php';
 
-// Who's logged in
 $student_id = $_SESSION['login_user'] ?? '';
 if ($student_id === '') {
     die('Not logged in.');
 }
 
-// Helper: current semester label like "Fall 2025"
 function current_semester_label(): string {
     $y = (int)date('Y');
     $m = (int)date('n');
@@ -65,38 +63,34 @@ if (isset($_GET['drop'])) {
 
 /* ------------------ DATA FOR UI ------------------ */
 // Courses NOT yet enrolled by this student (for the select)
-$avail_q = $conn->prepare("
-    SELECT c.course_id, c.course_name
-    FROM courses c
-    WHERE NOT EXISTS (
-        SELECT 1 FROM enrollments e
-        WHERE e.student_id = ? AND e.course_id = c.course_id
-    )
-    ORDER BY c.course_name
-");
+$avail_q = $conn->prepare(" SELECT c.course_id, c.course_name
+                            FROM courses c
+                            WHERE NOT EXISTS (
+                                  SELECT 1 FROM enrollments e
+                                  WHERE e.student_id = ? AND e.course_id = c.course_id
+                            )
+                            ORDER BY c.course_name");
+
 $avail_q->bind_param("s", $student_id);
 $avail_q->execute();
 $available_courses = $avail_q->get_result()->fetch_all(MYSQLI_ASSOC);
 $avail_q->close();
 
-// My current courses (with instructor name if mapping exists)
-$mine = $conn->prepare("
-    SELECT e.course_id, c.course_name,
-           CONCAT(f.first_name, ' ', f.last_name) AS instructor,
-           e.semester
-    FROM enrollments e
-    JOIN courses c ON c.course_id = e.course_id
-    LEFT JOIN faculty_courses fc ON fc.course_id = c.course_id
-    LEFT JOIN faculty f ON f.faculty_id = fc.faculty_id
-    WHERE e.student_id = ?
-    ORDER BY c.course_name
-");
+//current courses (with instructor name if mapping exists)
+$mine = $conn->prepare(" SELECT e.course_id, c.course_name, CONCAT(f.first_name, ' ', f.last_name) AS instructor, e.semester
+                         FROM enrollments e
+                         JOIN courses c ON c.course_id = e.course_id
+                         LEFT JOIN faculty_courses fc ON fc.course_id = c.course_id
+                         LEFT JOIN faculty f ON f.faculty_id = fc.faculty_id
+                         WHERE e.student_id = ?
+                         ORDER BY c.course_name");
+
 $mine->bind_param("s", $student_id);
 $mine->execute();
 $my_courses = $mine->get_result();
 $mine->close();
 
-// Semester options (this + near adjacent terms)
+// Semester options
 $y = (int)date('Y');
 $semester_options = ["Spring {$y}", "Summer {$y}", "Fall {$y}"];
 $default_semester = current_semester_label();

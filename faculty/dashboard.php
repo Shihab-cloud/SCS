@@ -3,26 +3,20 @@ require_once __DIR__ . '/../includes/header.php';
 require_once __DIR__ . '/../db/config.php';
 include __DIR__ . '/../includes/sidebar_faculty.php';
 
-$today = date('l'); // e.g. Monday
+$today = date('l'); //Day
 $fid = $FACULTY_ID;
 
 // Today’s classes
-$cls = $conn->prepare("
-  SELECT cs.course_id, c.course_name, cs.day, cs.start_time, cs.end_time, cs.room_number
-  FROM Class_Schedules cs
-  JOIN Courses c ON c.course_id = cs.course_id
-  WHERE cs.faculty_id = ? AND cs.day = ?
-  ORDER BY cs.start_time
-");
+$cls = $conn->prepare(" SELECT cs.course_id, c.course_name, cs.day, cs.start_time, cs.end_time, cs.room_number
+                        FROM Class_Schedules cs JOIN Courses c ON c.course_id = cs.course_id
+                        WHERE cs.faculty_id = ? AND cs.day = ?
+                        ORDER BY cs.start_time");
 $cls->bind_param('ss', $fid, $today);
 $cls->execute();
 $classes = $cls->get_result();
 
 // Recent notices
-$nts = $conn->prepare("
-  SELECT title, posted_date, target_audience FROM Notices
-  WHERE posted_by = ? ORDER BY posted_date DESC LIMIT 5
-");
+$nts = $conn->prepare(" SELECT title, posted_date, target_audience FROM Notices WHERE posted_by = ? ORDER BY posted_date DESC LIMIT 5");
 $nts->bind_param('s', $fid);
 $nts->execute();
 $notices = $nts->get_result();

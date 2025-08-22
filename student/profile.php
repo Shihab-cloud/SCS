@@ -1,8 +1,8 @@
 <?php
 session_start();
-require_once __DIR__ . '/../db/config.php';  // Include DB connection
+require_once __DIR__ . '/../db/config.php';
 
-$student_id = $_SESSION['login_user'];  // Get student ID from session
+$student_id = $_SESSION['login_user'];
 $error = "";
 $success = "";
 

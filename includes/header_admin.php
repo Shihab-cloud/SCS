@@ -4,7 +4,7 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
     header("Location: /smart_cloud_system/login_step1.php");
     exit();
 }
-$ADMIN_ID = $_SESSION['login_user']; // Admin ID from the session
+$ADMIN_ID = $_SESSION['login_user'];
 ?>
 <!DOCTYPE html>
 <html lang="en">

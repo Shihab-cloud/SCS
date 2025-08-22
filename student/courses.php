@@ -8,30 +8,17 @@ if ($student_id === '') {
     die('Not logged in.');
 }
 
-/*
-  Only schedules for courses the student is enrolled in.
-  (If a course has multiple meeting times, they’ll all show.)
-*/
-$sql = "
-SELECT
-    cs.course_id,
-    c.course_name,
-    CONCAT(f.first_name, ' ', f.last_name) AS instructor,
-    cs.day,
-    DATE_FORMAT(cs.start_time, '%H:%i') AS start_time,
-    DATE_FORMAT(cs.end_time,   '%H:%i') AS end_time,
-    cs.room_number
-FROM class_schedules cs
-JOIN courses c      ON c.course_id  = cs.course_id
-LEFT JOIN faculty f ON f.faculty_id = cs.faculty_id
-WHERE EXISTS (
-    SELECT 1
-    FROM enrollments e
-    WHERE e.student_id = ?
-      AND e.course_id  = cs.course_id
-)
-ORDER BY c.course_name, cs.day, cs.start_time
-";
+$sql = "SELECT cs.course_id, c.course_name, CONCAT(f.first_name, ' ', f.last_name) AS instructor, cs.day, DATE_FORMAT(cs.start_time, '%H:%i') AS start_time, DATE_FORMAT(cs.end_time, '%H:%i') AS end_time, cs.room_number
+        FROM class_schedules cs
+        JOIN courses c ON c.course_id  = cs.course_id
+        LEFT JOIN faculty f ON f.faculty_id = cs.faculty_id
+        WHERE EXISTS (
+              SELECT 1
+              FROM enrollments e
+              WHERE e.student_id = ? AND e.course_id  = cs.course_id
+        )
+        ORDER BY c.course_name, cs.day, cs.start_time";
+
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("s", $student_id);
 $stmt->execute();

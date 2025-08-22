@@ -1,7 +1,7 @@
 // /assets/js/app.js
 document.addEventListener('DOMContentLoaded', () => {
   // Get the role from PHP session (which was set dynamically in header.php)
-  const userRole = '<?php echo $_SESSION["role"]; ?>';  // Outputs 'faculty', 'student', or 'admin'
+  const userRole = '<?php echo $_SESSION["role"]; ?>';
 
   // ===== Sidebar toggle with remember state =====
   const sidebar = document.querySelector('.sidebar');
@@ -31,7 +31,6 @@ document.addEventListener('DOMContentLoaded', () => {
       e.preventDefault();
       const role = roleSelect.value;
       if (!role) return;
-      // Adjust base path if your folder name/case differs
       const base = '/smart_cloud_system';
       window.location.href = role === 'faculty'
         ? `${base}/faculty_register.php`
@@ -71,15 +70,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // ===== Student-specific helpers =====
   if (userRole === 'student') {
-    // Logic for student-specific interactions, e.g., viewing grades, etc.
     console.log('Student dashboard loaded');
-    // You can add more functions like updating grades, viewing notices, etc.
+    //need to add functionalities for student
   }
 
-  // ===== Admin-specific helpers (if applicable) =====
+  // ===== Admin-specific helpers =====
   if (userRole === 'admin') {
-    // Logic for admin-specific interactions (e.g., managing faculty or students)
     console.log('Admin dashboard loaded');
+    //need to add functionalities for admin
   }
-
 });

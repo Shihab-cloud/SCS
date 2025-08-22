@@ -14,7 +14,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stmt->execute();
     $result = $stmt->get_result();
     if ($result->num_rows === 1) {
-        $_SESSION['role'] = 'admin';   // ✅ Set clearly
+        $_SESSION['role'] = 'admin';
         header("Location: login_step2.php");
         exit();
     }
@@ -25,7 +25,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stmt->execute();
     $result = $stmt->get_result();
     if ($result->num_rows === 1) {
-        $_SESSION['role'] = 'faculty'; // ✅ Set clearly
+        $_SESSION['role'] = 'faculty';
         header("Location: login_step2.php");
         exit();
     }
@@ -36,7 +36,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stmt->execute();
     $result = $stmt->get_result();
     if ($result->num_rows === 1) {
-        $_SESSION['role'] = 'student'; // ✅ Set clearly
+        $_SESSION['role'] = 'student';
         header("Location: login_step2.php");
         exit();
     }

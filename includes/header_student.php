@@ -3,7 +3,7 @@ session_start();
 if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'student') {
   header("Location: /smart_cloud_system/login_step1.php"); exit();
 }
-$STUDENT_ID = $_SESSION['login_user'];  // Student ID from the session
+$STUDENT_ID = $_SESSION['login_user'];
 ?>
 <!DOCTYPE html>
 <html lang="en">

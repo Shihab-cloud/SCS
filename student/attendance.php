@@ -3,9 +3,9 @@ require_once __DIR__ . '/../includes/header_student.php';
 include __DIR__ . '/../includes/sidebar_student.php';
 require_once __DIR__ . '/../db/config.php';
 
-$student_id = $_SESSION['login_user'];  // Logged-in student ID
+$student_id = $_SESSION['login_user'];
 
-// Get the attendance records for the student
+//Retreives attendance record
 $stmt = $conn->prepare("SELECT c.course_id, c.course_name, a.date, a.status FROM Attendance a JOIN Courses c ON c.course_id = a.course_id WHERE a.student_id = ? ORDER BY a.date DESC");
 $stmt->bind_param("s", $student_id);
 $stmt->execute();

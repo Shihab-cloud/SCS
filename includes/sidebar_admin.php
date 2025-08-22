@@ -7,7 +7,6 @@
     <li><a href="/smart_cloud_system/admin/student.php">Manage Students</a></li>
     <li><a href="/smart_cloud_system/admin/course.php">Manage Courses</a></li>
     <li><a href="/smart_cloud_system/admin/grades.php">Manage Grades</a></li>
-    <!--<li><a href="/smart_cloud_system/admin/notices.php">Manage Notices</a></li>-->
     <li><a href="/smart_cloud_system/admin/settings.php">Admin Profile & Settings</a></li>
   </ul>
   <div class="sidebar-footer">

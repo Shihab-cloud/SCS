@@ -1,8 +1,8 @@
 <?php
 session_start();
-require_once __DIR__ . '/../db/config.php';  // Include database connection
+require_once __DIR__ . '/../db/config.php';
 
-$student_id = $_SESSION['login_user']; // Get student ID from session
+$student_id = $_SESSION['login_user'];
 $error = "";
 $success_message = "";
 
@@ -25,12 +25,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // Compare entered current password with the stored one
         if ($user && $current_password === $user['password']) {
-            // Update the password in the database (plain text)
+            // Update the password in the database
             $update_stmt = $conn->prepare("UPDATE Students SET password = ? WHERE student_id = ?");
             $update_stmt->bind_param("ss", $new_password, $student_id);
             $update_stmt->execute();
-
-            // Optional: Show a success message
             $success_message = "Password updated successfully!";
         } else {
             $error = "Current password is incorrect.";

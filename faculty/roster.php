@@ -12,13 +12,10 @@ $auth->bind_param('ss', $fid, $course_id);
 $auth->execute();
 if ($auth->get_result()->num_rows === 0) { echo "<div class='card'>Unauthorized.</div></main></div></body></html>"; exit; }
 
-$stmt = $conn->prepare("
-  SELECT s.student_id, s.first_name, s.last_name, s.email
-  FROM Enrollments e
-  JOIN Students s ON s.student_id = e.student_id
-  WHERE e.course_id = ?
-  ORDER BY s.last_name, s.first_name
-");
+$stmt = $conn->prepare(" SELECT s.student_id, s.first_name, s.last_name, s.email
+                         FROM Enrollments e JOIN Students s ON s.student_id = e.student_id
+                         WHERE e.course_id = ?
+                         ORDER BY s.last_name, s.first_name");
 $stmt->bind_param('s', $course_id);
 $stmt->execute();
 $res = $stmt->get_result();

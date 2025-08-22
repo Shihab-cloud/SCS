@@ -4,13 +4,10 @@ require_once __DIR__ . '/../db/config.php';
 include __DIR__ . '/../includes/sidebar_faculty.php';
 
 $fid = $FACULTY_ID;
-$stmt = $conn->prepare("
-  SELECT cs.course_id, c.course_name, cs.day, cs.start_time, cs.end_time, cs.room_number
-  FROM Class_Schedules cs
-  JOIN Courses c ON c.course_id = cs.course_id
-  WHERE cs.faculty_id = ?
-  ORDER BY c.course_name
-");
+$stmt = $conn->prepare(" SELECT cs.course_id, c.course_name, cs.day, cs.start_time, cs.end_time, cs.room_number
+                         FROM Class_Schedules cs JOIN Courses c ON c.course_id = cs.course_id
+                         WHERE cs.faculty_id = ?
+                         ORDER BY c.course_name");
 $stmt->bind_param('s', $fid);
 $stmt->execute();
 $res = $stmt->get_result();

@@ -1,5 +1,4 @@
 <?php
-// student/grades_pdf.php
 session_start();
 
 if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'student') {
@@ -20,18 +19,17 @@ $stu = $stuStmt->get_result()->fetch_assoc();
 $fullName = trim(($stu['first_name'] ?? '') . ' ' . ($stu['last_name'] ?? ''));
 
 // Fetch grades
-$gStmt = $conn->prepare("
-  SELECT c.course_id, c.course_name, r.marks_obtained, r.grade
-  FROM Results r
-  JOIN Courses c ON c.course_id = r.course_id
-  WHERE r.student_id = ?
-  ORDER BY c.course_id
-");
+$gStmt = $conn->prepare(" SELECT c.course_id, c.course_name, r.marks_obtained, r.grade
+                          FROM Results r
+                          JOIN Courses c ON c.course_id = r.course_id
+                          WHERE r.student_id = ?
+                          ORDER BY c.course_id");
+
 $gStmt->bind_param("s", $student_id);
 $gStmt->execute();
 $grades = $gStmt->get_result();
 
-// ---- Build PDF (no prior output!) ----
+// ---- Build PDF
 $pdf = new FPDF('P', 'mm', 'A4');
 $pdf->AddPage();
 
@@ -62,11 +60,11 @@ while ($row = $grades->fetch_assoc()) {
     $pdf->Cell(25, 9, $row['grade'], 1, 1, 'C');
 }
 
-// Make sure there is absolutely no previous output in the buffer:
+// Make sures that there is absolutely no previous output in the buffer:
 if (ob_get_length()) {
     ob_end_clean();
 }
 
-// Send the PDF (download)
+// Send the PDF
 $pdf->Output('D', "grade_sheet_{$student_id}.pdf");
 exit;

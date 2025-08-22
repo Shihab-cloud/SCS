@@ -3,9 +3,9 @@ require_once __DIR__ . '/../includes/header_student.php';
 include __DIR__ . '/../includes/sidebar_student.php';
 require_once __DIR__ . '/../db/config.php';
 
-$student_id = $_SESSION['login_user'];  // Logged-in student ID
+$student_id = $_SESSION['login_user'];
 
-// Get the student's full name (first and last name)
+// Get the student's full name
 $stmt = $conn->prepare("SELECT first_name, last_name FROM Students WHERE student_id = ?");
 $stmt->bind_param("s", $student_id);
 $stmt->execute();

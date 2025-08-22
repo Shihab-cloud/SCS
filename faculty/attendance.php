@@ -17,24 +17,20 @@ if ($_SERVER['REQUEST_METHOD']==='POST') {
   $date = $_POST['date'] ?? date('Y-m-d');
   foreach($_POST['status'] ?? [] as $sid => $val) {
     $st = strtoupper($val)==='P' ? 'P' : 'A';
-    $ins = $conn->prepare("
-      INSERT INTO Attendance (student_id, course_id, date, status)
-      VALUES (?, ?, ?, ?)
-      ON DUPLICATE KEY UPDATE status=VALUES(status)
-    ");
+    $ins = $conn->prepare(" INSERT INTO Attendance (student_id, course_id, date, status)
+                            VALUES (?, ?, ?, ?) ON DUPLICATE KEY UPDATE status=VALUES(status)");
     $ins->bind_param('ssss', $sid, $course_id, $date, $st);
     $ins->execute();
   }
   $msg = 'Attendance saved.';
 }
 
-$roster = $conn->prepare("
-  SELECT s.student_id, s.first_name, s.last_name
-  FROM Enrollments e
-  JOIN Students s ON s.student_id = e.student_id
-  WHERE e.course_id = ?
-  ORDER BY s.last_name, s.first_name
-");
+$roster = $conn->prepare(" SELECT s.student_id, s.first_name, s.last_name
+                           FROM Enrollments e
+                           JOIN Students s ON s.student_id = e.student_id
+                           WHERE e.course_id = ?
+                           ORDER BY s.last_name, s.first_name");
+
 $roster->bind_param('s', $course_id);
 $roster->execute();
 $list = $roster->get_result();

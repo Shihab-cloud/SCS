@@ -31,8 +31,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
           if ($role === 'admin') {
             header("Location: {$APP_BASE}/admin/dashboard.php");
           } elseif ($role === 'faculty') {
-            header("Location: {$APP_BASE}/faculty/dashboard.php");  // <-- new path
-          } else { // student
+            header("Location: {$APP_BASE}/faculty/dashboard.php");
+          } else {
             header("Location: {$APP_BASE}/student/dashboard.php");
           }
           exit();
