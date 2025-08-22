@@ -1,146 +1,138 @@
 <?php
-// --- INCLUDES and DATABASE CONNECTION ---
+// Process BEFORE any HTML
+//if (session_status() === PHP_SESSION_NONE) session_start();
+require_once __DIR__ . '/../db/config.php';
+// mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
+
+$add_vals = ['student_id'=>'','course_id'=>'','marks'=>'','grade'=>''];
+
+/* ---------- ADD GRADE ---------- */
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['form'] ?? '') === 'add_grade') {
+    $student_id = trim($_POST['student_id'] ?? '');
+    $course_id  = trim($_POST['course_id'] ?? '');
+    $marks_raw  = $_POST['marks'] ?? '';
+    $grade      = trim($_POST['grade'] ?? '');
+
+    $add_vals = ['student_id'=>$student_id,'course_id'=>$course_id,'marks'=>$marks_raw,'grade'=>$grade];
+
+    $errors = [];
+    if ($student_id === '') $errors[] = "Student is required.";
+    if ($course_id  === '') $errors[] = "Course is required.";
+    if ($marks_raw === '' || !is_numeric($marks_raw)) $errors[] = "Marks must be a number.";
+    if ($grade === '') $errors[] = "Grade is required.";
+    $marks = (float)$marks_raw;
+
+    if (!$errors) {
+        // check duplicate (composite key student_id+course_id)
+        $chk = $conn->prepare("SELECT 1 FROM results WHERE student_id=? AND course_id=?");
+        $chk->bind_param("ss", $student_id, $course_id);
+        $chk->execute();
+        $exists = $chk->get_result()->num_rows > 0;
+        $chk->close();
+
+        if ($exists) {
+            $_SESSION['error'] = "Grade already exists for this student & course. Use Edit.";
+        } else {
+            $ins = $conn->prepare(
+                "INSERT INTO results (student_id, course_id, marks_obtained, grade)
+                 VALUES (?,?,?,?)"
+            );
+            $ins->bind_param("ssds", $student_id, $course_id, $marks, $grade);
+            if ($ins->execute()) {
+                $_SESSION['message'] = "Grade saved.";
+                header("Location: ".$_SERVER['PHP_SELF']); exit;
+            }
+            $_SESSION['error'] = "Could not save grade.";
+        }
+    } else {
+        $_SESSION['error'] = implode(' ', $errors);
+    }
+}
+
+/* ---------- FETCH DATA FOR UI ---------- */
+$students = $conn->query("SELECT student_id, first_name, last_name FROM students ORDER BY first_name, last_name")->fetch_all(MYSQLI_ASSOC);
+$courses  = $conn->query("SELECT course_id, course_name FROM courses ORDER BY course_name")->fetch_all(MYSQLI_ASSOC);
+$grades   = $conn->query("SELECT r.student_id, r.course_id, s.first_name, s.last_name, c.course_name, r.marks_obtained, r.grade
+                          FROM results r
+                          JOIN students s ON r.student_id = s.student_id
+                          JOIN courses  c ON r.course_id  = c.course_id
+                          ORDER BY s.last_name, s.first_name, c.course_name");
+
 require_once __DIR__ . '/../includes/header_admin.php';
 include __DIR__ . '/../includes/sidebar_admin.php';
-require_once __DIR__ . '/../db/config.php';
-
-// --- DATABASE CONNECTION CHECK ---
-if (!$conn || $conn->connect_error) {
-    die("FATAL ERROR: Database connection failed: " . $conn->connect_error);
-}
-
-// --- FORM SUBMISSION LOGIC (ADD & EDIT) ---
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit_grade'])) {
-    $student_id = trim($_POST['student_id']);
-    $course_id = trim($_POST['course_id']);
-    $marks = $_POST['marks'];
-    $grade = trim($_POST['grade']);
-
-    // Simplified SQL for maximum reliability
-    $sql = "INSERT INTO results (student_id, course_id, marks_obtained, grade)
-            VALUES (?, ?, ?, ?)
-            ON DUPLICATE KEY UPDATE marks_obtained = VALUES(marks_obtained), grade = VALUES(grade)";
-            
-    $stmt = $conn->prepare($sql);
-    if ($stmt === false) {
-        die("ERROR: SQL query preparation failed: " . $conn->error);
-    }
-    
-    $stmt->bind_param("ssds", $student_id, $course_id, $marks, $grade);
-
-    if (!$stmt->execute()) {
-        die("ERROR: Could not save the grade. " . $stmt->error);
-    }
-    
-    $stmt->close();
-    header("Location: " . $_SERVER['PHP_SELF']);
-    exit();
-}
-
-// --- EDIT MODE LOGIC ---
-$is_edit_mode = false;
-$grade_to_edit = ['student_id' => '', 'course_id' => '', 'marks_obtained' => '', 'grade' => ''];
-if (isset($_GET['edit']) && isset($_GET['student_id']) && isset($_GET['course_id'])) {
-    $is_edit_mode = true;
-    $edit_stmt = $conn->prepare("SELECT student_id, course_id, marks_obtained, grade FROM results WHERE student_id = ? AND course_id = ?");
-    $edit_stmt->bind_param("ss", $_GET['student_id'], $_GET['course_id']);
-    $edit_stmt->execute();
-    $result = $edit_stmt->get_result();
-    if ($result->num_rows > 0) {
-        $grade_to_edit = $result->fetch_assoc();
-    }
-    $edit_stmt->close();
-}
-
-// --- DELETE LOGIC ---
-if (isset($_GET['delete']) && isset($_GET['student_id']) && isset($_GET['course_id'])) {
-    $delete_stmt = $conn->prepare("DELETE FROM results WHERE student_id = ? AND course_id = ?");
-    $delete_stmt->bind_param("ss", $_GET['student_id'], $_GET['course_id']);
-    $delete_stmt->execute();
-    $delete_stmt->close();
-    header("Location: " . $_SERVER['PHP_SELF']);
-    exit();
-}
-
-// --- DATA FETCHING FOR PAGE DISPLAY ---
-$all_students = $conn->query("SELECT student_id, first_name, last_name FROM students ORDER BY first_name, last_name")->fetch_all(MYSQLI_ASSOC);
-$all_courses = $conn->query("SELECT course_id, course_name FROM courses ORDER BY course_name")->fetch_all(MYSQLI_ASSOC);
-$grades_result = $conn->query("SELECT r.student_id, r.course_id, s.first_name, s.last_name, c.course_name, r.marks_obtained, r.grade
-                               FROM results r
-                               JOIN students s ON r.student_id = s.student_id
-                               JOIN courses c ON r.course_id = c.course_id
-                               ORDER BY s.last_name, s.first_name, c.course_name");
 ?>
-
 <div class="card">
-    <h2><?php echo $is_edit_mode ? 'Edit Grade' : 'Manage Grades'; ?></h2>
-    <h3><?php echo $is_edit_mode ? 'Update Grade Details' : 'Add New Grade'; ?></h3>
-    <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST">
-        <label for="student_id">Student:</label>
-        <select name="student_id" required <?php if ($is_edit_mode) echo 'disabled'; ?>>
+    <h2>Manage Grades</h2>
+
+    <?php if (!empty($_SESSION['message'])): ?>
+        <p style="color:green"><?php echo htmlspecialchars($_SESSION['message']); unset($_SESSION['message']); ?></p>
+    <?php endif; ?>
+    <?php if (!empty($_SESSION['error'])): ?>
+        <p style="color:red"><?php echo htmlspecialchars($_SESSION['error']); unset($_SESSION['error']); ?></p>
+    <?php endif; ?>
+
+    <h3>Add New Grade</h3>
+    <form method="POST" action="">
+        <input type="hidden" name="form" value="add_grade">
+        <label>Student:</label>
+        <select name="student_id" required>
             <option value="">Select Student</option>
-            <?php foreach ($all_students as $student): ?>
-                <option value="<?php echo $student['student_id']; ?>" <?php if ($grade_to_edit['student_id'] == $student['student_id']) echo 'selected'; ?>>
-                    <?php echo htmlspecialchars($student['first_name'] . ' ' . $student['last_name']); ?>
+            <?php foreach ($students as $s): ?>
+                <option value="<?php echo $s['student_id']; ?>"
+                    <?php if ($add_vals['student_id']===$s['student_id']) echo 'selected'; ?>>
+                    <?php echo htmlspecialchars($s['first_name'].' '.$s['last_name']); ?>
                 </option>
             <?php endforeach; ?>
         </select>
-        <?php if ($is_edit_mode): ?>
-            <input type="hidden" name="student_id" value="<?php echo htmlspecialchars($grade_to_edit['student_id']); ?>">
-        <?php endif; ?>
-        <label for="course_id">Course:</label>
-        <select name="course_id" required <?php if ($is_edit_mode) echo 'disabled'; ?>>
+
+        <label>Course:</label>
+        <select name="course_id" required>
             <option value="">Select Course</option>
-            <?php foreach ($all_courses as $course): ?>
-                <option value="<?php echo $course['course_id']; ?>" <?php if ($grade_to_edit['course_id'] == $course['course_id']) echo 'selected'; ?>>
-                    <?php echo htmlspecialchars($course['course_name']); ?>
+            <?php foreach ($courses as $c): ?>
+                <option value="<?php echo $c['course_id']; ?>"
+                    <?php if ($add_vals['course_id']===$c['course_id']) echo 'selected'; ?>>
+                    <?php echo htmlspecialchars($c['course_name']); ?>
                 </option>
             <?php endforeach; ?>
         </select>
-        <?php if ($is_edit_mode): ?>
-            <input type="hidden" name="course_id" value="<?php echo htmlspecialchars($grade_to_edit['course_id']); ?>">
-        <?php endif; ?>
-        <label for="marks">Marks:</label>
-        <input type="number" step="any" name="marks" placeholder="Enter marks" value="<?php echo htmlspecialchars($grade_to_edit['marks_obtained']); ?>" required>
-        <label for="grade">Grade:</label>
-        <input type="text" name="grade" placeholder="Enter grade (e.g., A, B, etc.)" value="<?php echo htmlspecialchars($grade_to_edit['grade']); ?>" required>
-        <button type="submit" name="submit_grade"><?php echo $is_edit_mode ? 'Update Grade' : 'Save Grade'; ?></button>
-        <?php if ($is_edit_mode): ?>
-            <a href="<?php echo $_SERVER['PHP_SELF']; ?>" class="button-cancel">Cancel</a>
-        <?php endif; ?>
+
+        <label>Marks:</label>
+        <input type="number" step="0.01" name="marks" required
+               value="<?php echo htmlspecialchars($add_vals['marks']); ?>">
+
+        <label>Grade:</label>
+        <input type="text" name="grade" required
+               value="<?php echo htmlspecialchars($add_vals['grade']); ?>">
+
+        <button type="submit" class="btn">Save Grade</button>
     </form>
 </div>
+
 <div class="card">
     <h3>All Grades</h3>
     <table class="table">
-        <thead>
+        <tr>
+            <th>Student</th>
+            <th>Course</th>
+            <th>Marks</th>
+            <th>Grade</th>
+            <th>Action</th>
+        </tr>
+        <?php if ($grades && $grades->num_rows): while ($row = $grades->fetch_assoc()): ?>
             <tr>
-                <th>Student</th>
-                <th>Course</th>
-                <th>Marks</th>
-                <th>Grade</th>
-                <th>Action</th>
+                <td><?php echo htmlspecialchars($row['first_name'].' '.$row['last_name']); ?></td>
+                <td><?php echo htmlspecialchars($row['course_name']); ?></td>
+                <td><?php echo htmlspecialchars($row['marks_obtained']); ?></td>
+                <td><?php echo htmlspecialchars($row['grade']); ?></td>
+                <td>
+                    <a href="edit_grades.php?student_id=<?php echo urlencode($row['student_id']); ?>&course_id=<?php echo urlencode($row['course_id']); ?>">Edit</a> |
+                    <a href="delete_grades.php?student_id=<?php echo urlencode($row['student_id']); ?>&course_id=<?php echo urlencode($row['course_id']); ?>"
+                       onclick="return confirm('Delete this grade?');">Delete</a>
+                </td>
             </tr>
-        </thead>
-        <tbody>
-            <?php if ($grades_result && $grades_result->num_rows > 0): ?>
-                <?php while ($grade_row = $grades_result->fetch_assoc()): ?>
-                    <tr>
-                        <td><?php echo htmlspecialchars($grade_row['first_name'] . ' ' . $grade_row['last_name']); ?></td>
-                        <td><?php echo htmlspecialchars($grade_row['course_name']); ?></td>
-                        <td><?php echo htmlspecialchars($grade_row['marks_obtained']); ?></td>
-                        <td><?php echo htmlspecialchars($grade_row['grade']); ?></td>
-                        <td>
-                            <a href="?edit=true&student_id=<?php echo $grade_row['student_id']; ?>&course_id=<?php echo $grade_row['course_id']; ?>">Edit</a> |
-                            <a href="?delete=true&student_id=<?php echo $grade_row['student_id']; ?>&course_id=<?php echo $grade_row['course_id']; ?>" onclick="return confirm('Are you sure you want to delete this grade?');">Delete</a>
-                        </td>
-                    </tr>
-                <?php endwhile; ?>
-            <?php else: ?>
-                <tr>
-                    <td colspan="5">No grades found.</td>
-                </tr>
-            <?php endif; ?>
-        </tbody>
+        <?php endwhile; else: ?>
+            <tr><td colspan="5">No grades found.</td></tr>
+        <?php endif; ?>
     </table>
 </div>
+</main></div></body></html>

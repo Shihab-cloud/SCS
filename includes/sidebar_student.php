@@ -4,6 +4,7 @@
   <ul>
     <li><a href="/smart_cloud_system/student/dashboard.php">Dashboard</a></li>
     <li><a href="/smart_cloud_system/student/courses.php">My Courses</a></li>
+    <li><a href="/smart_cloud_system/student/register_course.php">Register Courses</a></li>
     <li><a href="/smart_cloud_system/student/attendance.php">Attendance</a></li>
     <li><a href="/smart_cloud_system/student/grades.php">Grades</a></li>
     <li><a href="/smart_cloud_system/student/notices.php">Notices</a></li>

@@ -1,35 +1,46 @@
 <?php
+//session_start();
 require_once __DIR__ . '/../db/config.php';
 
 // mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 
-$original_id = $_GET['id'] ?? '';
-if ($original_id === '') {
+$course_id = $_GET['id'] ?? '';
+if ($course_id === '') {
     $_SESSION['error'] = "Missing course id.";
     header("Location: course.php"); exit;
 }
 
-/* Load existing row */
+/* Load existing */
 $sel = $conn->prepare("SELECT course_id, course_name, description, credits FROM courses WHERE course_id = ?");
-$sel->bind_param("s", $original_id);
+$sel->bind_param("s", $course_id);
 $sel->execute();
-$course = $sel->get_result()->fetch_assoc();
+$existing = $sel->get_result()->fetch_assoc();
 $sel->close();
 
-if (!$course) {
+if (!$existing) {
     $_SESSION['error'] = "Course not found.";
     header("Location: course.php"); exit;
 }
 
+// sticky values (default = DB)
+$vals = $existing;
+
 /* Update */
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_course'])) {
-    // Keep course_id immutable to avoid FK problems
-    $course_id   = $_POST['course_id']; // hidden, same as original
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['form'] ?? '') === 'update_course') {
     $course_name = trim($_POST['course_name'] ?? '');
     $description = trim($_POST['description'] ?? '');
-    $credits     = isset($_POST['credits']) ? (int)$_POST['credits'] : null;
+    $credits_raw = $_POST['credits'] ?? '';
 
-    if ($course_name !== '' && $credits !== null) {
+    $vals['course_name'] = $course_name;
+    $vals['description'] = $description;
+    $vals['credits']     = $credits_raw;
+
+    $errors = [];
+    if ($course_name === '') $errors[] = "Course name is required.";
+    if ($credits_raw === '' || !is_numeric($credits_raw)) $errors[] = "Credits must be a number.";
+    $credits = (int)$credits_raw;
+
+    if (!$errors) {
         $upd = $conn->prepare(
             "UPDATE courses SET course_name = ?, description = ?, credits = ? WHERE course_id = ?"
         );
@@ -42,12 +53,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_course'])) {
         }
         $upd->close();
     } else {
-        $_SESSION['error'] = "Course name and credits are required.";
+        $_SESSION['error'] = implode(' ', $errors);
+        // fall through to re-render with sticky $vals
     }
-    header("Location: ".$_SERVER['REQUEST_URI']); exit;
 }
 
-/* Output HTML AFTER logic */
+/* HTML */
 require_once __DIR__ . '/../includes/header_admin.php';
 include __DIR__ . '/../includes/sidebar_admin.php';
 ?>
@@ -59,28 +70,28 @@ include __DIR__ . '/../includes/sidebar_admin.php';
     <?php endif; ?>
 
     <form method="POST" action="">
-        <input type="hidden" name="course_id" value="<?php echo htmlspecialchars($course['course_id']); ?>">
+        <input type="hidden" name="form" value="update_course">
         <div class="form-group">
             <label>Course ID</label>
-            <input type="text" value="<?php echo htmlspecialchars($course['course_id']); ?>" readonly>
+            <input type="text" value="<?php echo htmlspecialchars($course_id); ?>" readonly>
         </div>
         <div class="form-group">
             <label for="course_name">Course Name</label>
-            <input id="course_name" name="course_name" type="text"
-                   value="<?php echo htmlspecialchars($course['course_name']); ?>" required>
+            <input id="course_name" name="course_name" type="text" required
+                   value="<?php echo htmlspecialchars($vals['course_name']); ?>">
         </div>
         <div class="form-group">
             <label for="description">Description (optional)</label>
             <textarea id="description" name="description" rows="3"><?php
-                echo htmlspecialchars($course['description'] ?? '');
+                echo htmlspecialchars($vals['description'] ?? '');
             ?></textarea>
         </div>
         <div class="form-group">
             <label for="credits">Credits</label>
-            <input id="credits" name="credits" type="number" min="1" max="10"
-                   value="<?php echo (int)$course['credits']; ?>" required>
+            <input id="credits" name="credits" type="number" min="1" max="10" required
+                   value="<?php echo htmlspecialchars($vals['credits']); ?>">
         </div>
-        <button type="submit" name="update_course" class="btn">Save Changes</button>
+        <button type="submit" class="btn">Save Changes</button>
         <a href="course.php" class="btn" style="margin-left:8px;">Cancel</a>
     </form>
 </div>
