@@ -1,0 +1,18 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Open PHP in Browser",
+      "type": "shell",
+      "command": "start",
+      "args": [
+        "http://localhost/smart_cloud_system/index.php"
+      ],
+      "windows": {
+        "command": "cmd",
+        "args": ["/c", "start http://localhost/smart_cloud_system/index.php"]
+      },
+      "problemMatcher": []
+    }
+  ]
+}
