@@ -9,7 +9,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $_SESSION['login_user'] = $username;
 
     // Check admin
-    $stmt = $conn->prepare("SELECT * FROM Admins WHERE username = ?");
+    $stmt = $conn->prepare("SELECT * FROM admins WHERE username = ?");
     $stmt->bind_param("s", $username);
     $stmt->execute();
     $result = $stmt->get_result();
@@ -20,7 +20,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     // Check faculty
-    $stmt = $conn->prepare("SELECT * FROM Faculty WHERE faculty_id = ?");
+    $stmt = $conn->prepare("SELECT * FROM faculty WHERE faculty_id = ?");
     $stmt->bind_param("s", $username);
     $stmt->execute();
     $result = $stmt->get_result();
@@ -31,7 +31,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     // Check student
-    $stmt = $conn->prepare("SELECT * FROM Students WHERE student_id = ?");
+    $stmt = $conn->prepare("SELECT * FROM students WHERE student_id = ?");
     $stmt->bind_param("s", $username);
     $stmt->execute();
     $result = $stmt->get_result();
@@ -50,7 +50,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <head>
   <meta charset="UTF-8">
   <title>Login | SCS</title>
-  <link rel="stylesheet" href="css/login.css">
+  <link rel="stylesheet" href="CSS/login.css">
 </head>
 <body>
   <div class="login-box">
