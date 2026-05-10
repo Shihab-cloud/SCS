@@ -9,7 +9,7 @@ $msg = '';
 if ($_SERVER['REQUEST_METHOD']==='POST') {
   $new = $_POST['new_password'] ?? '';
   if ($new) {
-    $u = $conn->prepare("UPDATE Faculty SET password=? WHERE faculty_id=?");
+    $u = $conn->prepare("UPDATE faculty SET password=? WHERE faculty_id=?");
     $u->bind_param('ss', $new, $fid);
     $u->execute();
     $msg = 'Password updated.';

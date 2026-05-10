@@ -7,7 +7,7 @@ $fid = $FACULTY_ID;
 $course_id = $_GET['course_id'] ?? '';
 if (!$course_id) { echo "<div class='card'>No course selected.</div></main></div></body></html>"; exit; }
 
-$auth = $conn->prepare("SELECT 1 FROM Class_Schedules WHERE faculty_id=? AND course_id=?");
+$auth = $conn->prepare("SELECT 1 FROM class_schedules WHERE faculty_id=? AND course_id=?");
 $auth->bind_param('ss', $fid, $course_id);
 $auth->execute();
 if ($auth->get_result()->num_rows === 0) { echo "<div class='card'>Unauthorized.</div></main></div></body></html>"; exit; }
@@ -17,7 +17,7 @@ if ($_SERVER['REQUEST_METHOD']==='POST') {
   $date = $_POST['date'] ?? date('Y-m-d');
   foreach($_POST['status'] ?? [] as $sid => $val) {
     $st = strtoupper($val)==='P' ? 'P' : 'A';
-    $ins = $conn->prepare(" INSERT INTO Attendance (student_id, course_id, date, status)
+    $ins = $conn->prepare(" INSERT INTO attendance (student_id, course_id, date, status)
                             VALUES (?, ?, ?, ?) ON DUPLICATE KEY UPDATE status=VALUES(status)");
     $ins->bind_param('ssss', $sid, $course_id, $date, $st);
     $ins->execute();
@@ -26,8 +26,8 @@ if ($_SERVER['REQUEST_METHOD']==='POST') {
 }
 
 $roster = $conn->prepare(" SELECT s.student_id, s.first_name, s.last_name
-                           FROM Enrollments e
-                           JOIN Students s ON s.student_id = e.student_id
+                           FROM enrollments e
+                           JOIN students s ON s.student_id = e.student_id
                            WHERE e.course_id = ?
                            ORDER BY s.last_name, s.first_name");
 

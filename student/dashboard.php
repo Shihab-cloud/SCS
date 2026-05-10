@@ -6,14 +6,14 @@ require_once __DIR__ . '/../db/config.php';
 $student_id = $_SESSION['login_user'];
 
 // Get the student's full name
-$stmt = $conn->prepare("SELECT first_name, last_name FROM Students WHERE student_id = ?");
+$stmt = $conn->prepare("SELECT first_name, last_name FROM students WHERE student_id = ?");
 $stmt->bind_param("s", $student_id);
 $stmt->execute();
 $student_result = $stmt->get_result();
 $student = $student_result->fetch_assoc();
 
 // Get recent notices for student
-$notices = $conn->prepare("SELECT title, posted_date FROM Notices WHERE target_audience = 'ALL' OR target_audience LIKE ? ORDER BY posted_date DESC LIMIT 5");
+$notices = $conn->prepare("SELECT title, posted_date FROM notices WHERE target_audience = 'ALL' OR target_audience LIKE ? ORDER BY posted_date DESC LIMIT 5");
 $notices->bind_param('s', $student_id);
 $notices->execute();
 $notices_result = $notices->get_result();

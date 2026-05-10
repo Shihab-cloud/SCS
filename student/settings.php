@@ -17,7 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $error = "New password and confirmation do not match.";
     } else {
         // Check if current password is correct
-        $stmt = $conn->prepare("SELECT password FROM Students WHERE student_id = ?");
+        $stmt = $conn->prepare("SELECT password FROM students WHERE student_id = ?");
         $stmt->bind_param("s", $student_id);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -26,7 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Compare entered current password with the stored one
         if ($user && $current_password === $user['password']) {
             // Update the password in the database
-            $update_stmt = $conn->prepare("UPDATE Students SET password = ? WHERE student_id = ?");
+            $update_stmt = $conn->prepare("UPDATE students SET password = ? WHERE student_id = ?");
             $update_stmt->bind_param("ss", $new_password, $student_id);
             $update_stmt->execute();
             $success_message = "Password updated successfully!";
@@ -42,7 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
   <meta charset="UTF-8" />
   <title>Settings | SCS</title>
-  <link rel="stylesheet" href="/smart_cloud_system/assests/css/student.css" />
+  <link rel="stylesheet" href="/../assests/css/student.css" />
 </head>
 <body>
   <div class="layout">

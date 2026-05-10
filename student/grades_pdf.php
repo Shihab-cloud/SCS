@@ -2,7 +2,7 @@
 session_start();
 
 if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'student') {
-    header("Location: /smart_cloud_system/login_step1.php");
+    header("Location: ../login_step1.php");
     exit;
 }
 
@@ -12,7 +12,7 @@ require_once __DIR__ . '/../fpdf/fpdf.php';
 $student_id = $_SESSION['login_user'] ?? '';
 
 // Fetch student info
-$stuStmt = $conn->prepare("SELECT first_name, last_name FROM Students WHERE student_id = ?");
+$stuStmt = $conn->prepare("SELECT first_name, last_name FROM students WHERE student_id = ?");
 $stuStmt->bind_param("s", $student_id);
 $stuStmt->execute();
 $stu = $stuStmt->get_result()->fetch_assoc();
@@ -20,8 +20,8 @@ $fullName = trim(($stu['first_name'] ?? '') . ' ' . ($stu['last_name'] ?? ''));
 
 // Fetch grades
 $gStmt = $conn->prepare(" SELECT c.course_id, c.course_name, r.marks_obtained, r.grade
-                          FROM Results r
-                          JOIN Courses c ON c.course_id = r.course_id
+                          FROM results r
+                          JOIN courses c ON c.course_id = r.course_id
                           WHERE r.student_id = ?
                           ORDER BY c.course_id");
 

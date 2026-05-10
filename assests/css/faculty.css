@@ -10,9 +10,28 @@ a:hover { text-decoration:underline; }
 .sidebar {
   width: 250px; background:#f0e4db; border-right:1px solid #dcc8ba;
   padding:16px; position:sticky; top:0; height:100vh;
+
+  display: flex;
+  flex-direction: column;
+  transition: width 0.3s ease-in-out, padding 0.3s ease-in-out;
+  overflow-x: hidden; /* Prevents text from sticking out during animation */
 }
 .sidebar .brand { font-weight:bold; margin-bottom:12px; color:#4B2E2E; }
-.sidebar-toggle { display:inline-block; margin:8px 0 16px; background:#6F4E37; color:#fff; border:none; padding:6px 10px; border-radius:4px; cursor:pointer; }
+.sidebar-toggle { 
+  display: block; 
+  width: 100%; /* Spans full width of sidebar */
+  margin: 8px 0 16px; 
+  background: #6F4E37; 
+  color: #fff; 
+  border: none; 
+  padding: 10px; 
+  border-radius: 4px; 
+  cursor: pointer; 
+}
+
+.sidebar.collapsed .sidebar-toggle {
+  padding: 10px 0;
+}
 .sidebar ul { list-style:none; padding:0; margin:0; }
 .sidebar li { margin:10px 0; }
 .sidebar a { display:block; padding:8px 10px; border-radius:6px; }
@@ -21,9 +40,28 @@ a:hover { text-decoration:underline; }
 .sidebar-footer .logout { display:inline-block; margin-top:8px; }
 
 /* Collapsed */
-.sidebar.collapsed { width:60px; }
-.sidebar.collapsed .brand, .sidebar.collapsed .sidebar-footer .me { display:none; }
-.sidebar.collapsed a { text-align:center; }
+.sidebar.collapsed { 
+  width: 70px; /* Increased slightly for better button fit */
+  padding: 16px 10px; 
+}
+
+/* Hide the Brand and Footer text */
+.sidebar.collapsed .brand, 
+.sidebar.collapsed .sidebar-footer .me { 
+  display: none; 
+}
+
+/* Hide the text inside the list items */
+.sidebar.collapsed ul li a {
+  text-align: center;
+  font-size: 0; /* Effectively hides the text */
+}
+
+/* If you add icons later, this ensures they stay visible */
+.sidebar.collapsed ul li a i {
+  font-size: 20px;
+  display: block;
+}
 
 /* Content */
 .content { flex:1; padding:24px; }

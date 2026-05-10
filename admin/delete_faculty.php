@@ -7,7 +7,7 @@ if (isset($_GET['id'])) {
     $faculty_id = $_GET['id'];
 
     // Delete the faculty member
-    $stmt = $conn->prepare("DELETE FROM Faculty WHERE faculty_id = ?");
+    $stmt = $conn->prepare("DELETE FROM faculty WHERE faculty_id = ?");
     $stmt->bind_param("s", $faculty_id);
 
     if ($stmt->execute()) {

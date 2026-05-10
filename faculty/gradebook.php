@@ -9,7 +9,7 @@ $semester  = $_GET['semester']  ?? 'Fall-2025';
 
 if (!$course_id) { echo "<div class='card'>No course selected.</div></main></div></body></html>"; exit; }
 
-$auth = $conn->prepare("SELECT 1 FROM Class_Schedules WHERE faculty_id=? AND course_id=?");
+$auth = $conn->prepare("SELECT 1 FROM class_schedules WHERE faculty_id=? AND course_id=?");
 $auth->bind_param('ss', $fid, $course_id);
 $auth->execute();
 if ($auth->get_result()->num_rows === 0) { echo "<div class='card'>Unauthorized.</div></main></div></body></html>"; exit; }
@@ -21,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD']==='POST') {
     $grade = $_POST['grade'][$sid] ?? '';
     if ($marks===null && $grade==='') continue;
 
-    $ins = $conn->prepare(" INSERT INTO Results (student_id, course_id, semester, marks_obtained, grade)
+    $ins = $conn->prepare(" INSERT INTO results (student_id, course_id, semester, marks_obtained, grade)
                             VALUES (?, ?, ?, ?, ?)
                             ON DUPLICATE KEY UPDATE marks_obtained=VALUES(marks_obtained), grade=VALUES(grade)");
     $ins->bind_param('sssds', $sid, $course_id, $semester, $marks, $grade);
@@ -31,7 +31,7 @@ if ($_SERVER['REQUEST_METHOD']==='POST') {
 }
 
 $roster = $conn->prepare(" SELECT s.student_id, s.first_name, s.last_name
-                           FROM Enrollments e JOIN Students s ON s.student_id = e.student_id
+                           FROM enrollments e JOIN students s ON s.student_id = e.student_id
                            WHERE e.course_id = ?
                            ORDER BY s.last_name, s.first_name");
 $roster->bind_param('s', $course_id);
@@ -40,7 +40,7 @@ $list = $roster->get_result();
 
 // preload existing
 $grades = [];
-$gq = $conn->prepare("SELECT student_id, marks_obtained, grade FROM Results WHERE course_id=? AND semester=?");
+$gq = $conn->prepare("SELECT student_id, marks_obtained, grade FROM results WHERE course_id=? AND semester=?");
 $gq->bind_param('ss', $course_id, $semester);
 $gq->execute();
 $grs = $gq->get_result();

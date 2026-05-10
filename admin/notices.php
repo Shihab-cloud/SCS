@@ -4,7 +4,7 @@ include __DIR__ . '/../includes/sidebar_admin.php';
 require_once __DIR__ . '/../db/config.php';
 
 // Display all notices
-$stmt = $conn->prepare("SELECT * FROM Notices");
+$stmt = $conn->prepare("SELECT * FROM notices");
 $stmt->execute();
 $notices_result = $stmt->get_result();
 ?>

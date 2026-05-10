@@ -4,19 +4,19 @@ include __DIR__ . '/../includes/sidebar_admin.php';
 require_once __DIR__ . '/../db/config.php';
 
 // Fetch statistics
-$stmt = $conn->prepare("SELECT COUNT(*) AS total_students FROM Students");
+$stmt = $conn->prepare("SELECT COUNT(*) AS total_students FROM students");
 $stmt->execute();
 $students_count = $stmt->get_result()->fetch_assoc()['total_students'];
 
-$stmt = $conn->prepare("SELECT COUNT(*) AS total_faculty FROM Faculty");
+$stmt = $conn->prepare("SELECT COUNT(*) AS total_faculty FROM faculty");
 $stmt->execute();
 $faculty_count = $stmt->get_result()->fetch_assoc()['total_faculty'];
 
-$stmt = $conn->prepare("SELECT COUNT(*) AS total_courses FROM Courses");
+$stmt = $conn->prepare("SELECT COUNT(*) AS total_courses FROM courses");
 $stmt->execute();
 $courses_count = $stmt->get_result()->fetch_assoc()['total_courses'];
 
-$stmt = $conn->prepare("SELECT title FROM Notices ORDER BY posted_date DESC LIMIT 5");
+$stmt = $conn->prepare("SELECT title FROM notices ORDER BY posted_date DESC LIMIT 5");
 $stmt->execute();
 $notices_result = $stmt->get_result();
 ?>

@@ -15,7 +15,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $current_password = $_POST['current_password'];
 
     // Validate current password using username instead of admin_id
-    $stmt = $conn->prepare("SELECT password FROM Admins WHERE username = ?");
+    $stmt = $conn->prepare("SELECT password FROM admins WHERE username = ?");
     $stmt->bind_param("s", $username);  // Use "s" for string parameter (for username)
     $stmt->execute();
     $result = $stmt->get_result();
@@ -26,7 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Check if current password matches the stored password
         if ($admin['password'] === $current_password) {
             // Update password if the current password is correct
-            $update_stmt = $conn->prepare("UPDATE Admins SET password = ? WHERE username = ?");
+            $update_stmt = $conn->prepare("UPDATE admins SET password = ? WHERE username = ?");
             $update_stmt->bind_param("ss", $new_password, $username); // "ss" for two strings
             $update_stmt->execute();
 

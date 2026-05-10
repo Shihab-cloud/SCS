@@ -11,13 +11,13 @@ if ($_SERVER['REQUEST_METHOD']==='POST') {
   $desc  = trim($_POST['description'] ?? '');
   $target= trim($_POST['target_audience'] ?? '');
   if ($title && $desc) {
-    $ins = $conn->prepare("INSERT INTO Notices (title, description, posted_by, posted_date, target_audience) VALUES (?, ?, ?, CURDATE(), ?)");
+    $ins = $conn->prepare("INSERT INTO notices (title, description, posted_by, posted_date, target_audience) VALUES (?, ?, ?, CURDATE(), ?)");
     $ins->bind_param('ssss', $title, $desc, $fid, $target);
     $ins->execute();
     $msg = 'Notice posted.';
   }
 }
-$all = $conn->prepare("SELECT title, posted_date, target_audience FROM Notices WHERE posted_by=? ORDER BY posted_date DESC");
+$all = $conn->prepare("SELECT title, posted_date, target_audience FROM notices WHERE posted_by=? ORDER BY posted_date DESC");
 $all->bind_param('s',$fid); $all->execute(); $rows = $all->get_result();
 ?>
 <div class="card">

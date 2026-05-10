@@ -4,7 +4,7 @@ include __DIR__ . '/../includes/sidebar_admin.php';
 require_once __DIR__ . '/../db/config.php';
 
 // Fetch all students
-$stmt = $conn->prepare("SELECT * FROM Students");
+$stmt = $conn->prepare("SELECT * FROM students");
 $stmt->execute();
 $students_result = $stmt->get_result();
 ?>

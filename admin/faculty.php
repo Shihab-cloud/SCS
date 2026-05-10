@@ -4,7 +4,7 @@ include __DIR__ . '/../includes/sidebar_admin.php';
 require_once __DIR__ . '/../db/config.php';
 
 // Fetching faculty data
-$stmt = $conn->prepare("SELECT Distinct * FROM Faculty");
+$stmt = $conn->prepare("SELECT Distinct * FROM faculty");
 $stmt->execute();
 $faculty_result = $stmt->get_result();
 ?>

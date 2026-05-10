@@ -7,7 +7,7 @@ $student_id = $_SESSION['login_user'];
 
 // Get grades
 $stmt = $conn->prepare(" SELECT c.course_id, c.course_name, r.marks_obtained, r.grade
-                         FROM Results r JOIN Courses c ON c.course_id = r.course_id
+                         FROM results r JOIN courses c ON c.course_id = r.course_id
                          WHERE r.student_id = ?
                          ORDER BY c.course_id");
                          

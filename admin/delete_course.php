@@ -9,7 +9,7 @@ if ($course_id === '') {
 }
 
 try {
-    $stmt = $conn->prepare("DELETE FROM Courses WHERE course_id = ?");
+    $stmt = $conn->prepare("DELETE FROM courses WHERE course_id = ?");
     $stmt->bind_param("s", $course_id);
     $stmt->execute();
 

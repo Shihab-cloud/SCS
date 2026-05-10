@@ -6,7 +6,7 @@ require_once __DIR__ . '/../db/config.php';
 $student_id = $_SESSION['login_user'];
 
 //Retreives attendance record
-$stmt = $conn->prepare("SELECT c.course_id, c.course_name, a.date, a.status FROM Attendance a JOIN Courses c ON c.course_id = a.course_id WHERE a.student_id = ? ORDER BY a.date DESC");
+$stmt = $conn->prepare("SELECT c.course_id, c.course_name, a.date, a.status FROM attendance a JOIN courses c ON c.course_id = a.course_id WHERE a.student_id = ? ORDER BY a.date DESC");
 $stmt->bind_param("s", $student_id);
 $stmt->execute();
 $attendance_result = $stmt->get_result();

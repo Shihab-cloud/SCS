@@ -7,7 +7,7 @@ $error = "";
 $success = "";
 
 // Get the student's current profile info
-$stmt = $conn->prepare("SELECT first_name, last_name, email FROM Students WHERE student_id = ?");
+$stmt = $conn->prepare("SELECT first_name, last_name, email FROM students WHERE student_id = ?");
 $stmt->bind_param("s", $student_id);
 $stmt->execute();
 $result = $stmt->get_result();
@@ -20,7 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $new_last_name = $_POST['last_name'];
 
     // Update the profile information
-    $update_stmt = $conn->prepare("UPDATE Students SET first_name = ?, last_name = ?, email = ? WHERE student_id = ?");
+    $update_stmt = $conn->prepare("UPDATE students SET first_name = ?, last_name = ?, email = ? WHERE student_id = ?");
     $update_stmt->bind_param("ssss", $new_first_name, $new_last_name, $new_email, $student_id);
 
     if ($update_stmt->execute()) {
@@ -36,7 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
     <meta charset="UTF-8" />
     <title>Profile | SCS</title>
-    <link rel="stylesheet" href="/smart_cloud_system/assests/css/student.css" />
+    <link rel="stylesheet" href="/../assests/css/student.css" />
 </head>
 <body>
   <div class="layout">

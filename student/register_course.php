@@ -100,7 +100,7 @@ $default_semester = current_semester_label();
 <head>
   <meta charset="UTF-8" />
   <title>Register Courses | SCS</title>
-  <link rel="stylesheet" href="/smart_cloud_system/assests/css/student.css" />
+  <link rel="stylesheet" href="/../assests/css/student.css" />
 </head>
 <body>
   <div class="layout">

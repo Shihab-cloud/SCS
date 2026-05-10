@@ -7,7 +7,7 @@ if (isset($_GET['id'])) {
     $faculty_id = $_GET['id'];
 
     // Fetch the faculty details
-    $stmt = $conn->prepare("SELECT * FROM Faculty WHERE faculty_id = ?");
+    $stmt = $conn->prepare("SELECT * FROM faculty WHERE faculty_id = ?");
     $stmt->bind_param("s", $faculty_id);
     $stmt->execute();
     $faculty = $stmt->get_result()->fetch_assoc();
@@ -19,7 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $last_name = $_POST['last_name'];
     $email = $_POST['email'];
 
-    $stmt = $conn->prepare("UPDATE Faculty SET first_name = ?, last_name = ?, email = ? WHERE faculty_id = ?");
+    $stmt = $conn->prepare("UPDATE faculty SET first_name = ?, last_name = ?, email = ? WHERE faculty_id = ?");
     $stmt->bind_param("ssss", $first_name, $last_name, $email, $faculty_id);
 
     if ($stmt->execute()) {

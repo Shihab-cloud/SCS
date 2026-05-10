@@ -8,7 +8,7 @@ $fid = $FACULTY_ID;
 
 // Today’s classes
 $cls = $conn->prepare(" SELECT cs.course_id, c.course_name, cs.day, cs.start_time, cs.end_time, cs.room_number
-                        FROM Class_Schedules cs JOIN Courses c ON c.course_id = cs.course_id
+                        FROM class_Schedules cs JOIN courses c ON c.course_id = cs.course_id
                         WHERE cs.faculty_id = ? AND cs.day = ?
                         ORDER BY cs.start_time");
 $cls->bind_param('ss', $fid, $today);

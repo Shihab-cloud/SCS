@@ -2,7 +2,7 @@
 include("db/config.php");
 $success = "";
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $stmt = $conn->prepare("INSERT INTO Faculty (faculty_id, first_name, last_name, email, password, department_id, designation, joining_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+    $stmt = $conn->prepare("INSERT INTO faculty (faculty_id, first_name, last_name, email, password, department_id, designation, joining_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
     $stmt->bind_param("ssssssss", $_POST['faculty_id'], $_POST['first_name'], $_POST['last_name'], $_POST['email'], $_POST['password'], $_POST['department_id'], $_POST['designation'], $_POST['joining_date']);
     if ($stmt->execute()) {
         $success = "Registration successful!";

@@ -1,23 +1,30 @@
 // /assets/js/app.js
 document.addEventListener('DOMContentLoaded', () => {
   // Get the role from PHP session (which was set dynamically in header.php)
-  const userRole = '<?php echo $_SESSION["role"]; ?>';
+  //const userRole = '<?php echo $_SESSION["role"]; ?>';
 
   // ===== Sidebar toggle with remember state =====
   const sidebar = document.querySelector('.sidebar');
   const toggle  = document.querySelector('[data-toggle="sidebar"]');
+
   if (sidebar && toggle) {
     const KEY = 'scs.sidebar.collapsed';
-    const apply = () => sidebar.classList.toggle('collapsed', localStorage.getItem(KEY) === '1');
+    
+    // Function to set the initial state from storage
+    const initialState = localStorage.getItem(KEY);
+    if (initialState === '1') {
+        sidebar.classList.add('collapsed');
+    }
+
     toggle.addEventListener('click', () => {
-      localStorage.setItem(KEY, localStorage.getItem(KEY) === '1' ? '0' : '1');
-      apply();
+        sidebar.classList.toggle('collapsed');
+        // Save state: 1 for collapsed, 0 for open
+        localStorage.setItem(KEY, sidebar.classList.contains('collapsed') ? '1' : '0');
     });
-    apply();
   }
 
   // ===== Active menu link highlight =====
-  const path = location.pathname.replace(/\/+$/, '');
+  const path = window.location.pathname; 
   document.querySelectorAll('.sidebar a[href]').forEach(a => {
     const href = a.getAttribute('href').replace(/\/+$/, '');
     if (href && path.endsWith(href)) a.classList.add('active');
@@ -31,7 +38,7 @@ document.addEventListener('DOMContentLoaded', () => {
       e.preventDefault();
       const role = roleSelect.value;
       if (!role) return;
-      const base = '/smart_cloud_system';
+      const base = '';
       window.location.href = role === 'faculty'
         ? `${base}/faculty_register.php`
         : `${base}/student_register.php`;

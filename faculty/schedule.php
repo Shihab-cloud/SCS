@@ -5,7 +5,7 @@ include __DIR__ . '/../includes/sidebar_faculty.php';
 
 $fid = $FACULTY_ID;
 $stmt = $conn->prepare(" SELECT cs.course_id, c.course_name, cs.day, cs.start_time, cs.end_time, cs.room_number
-                         FROM Class_Schedules cs JOIN Courses c ON c.course_id = cs.course_id
+                         FROM class_schedules cs JOIN courses c ON c.course_id = cs.course_id
                          WHERE cs.faculty_id = ?
                          ORDER BY FIELD(cs.day,'Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'), cs.start_time");
 $stmt->bind_param('s', $fid);

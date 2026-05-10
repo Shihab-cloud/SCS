@@ -18,7 +18,7 @@ if (isset($_GET['id'])) {
     $stmt->close();
 
     // Then, delete the student
-    $stmt = $conn->prepare("DELETE FROM Students WHERE student_id = ?");
+    $stmt = $conn->prepare("DELETE FROM students WHERE student_id = ?");
     $stmt->bind_param("s", $student_id);
 
     if ($stmt->execute()) {
