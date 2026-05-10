@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Welcome | Smart Cloud System</title>
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="CSS/style.css">
   <link href="https://fonts.googleapis.com/css2?family=ADLaM+Display&display=swap" rel="stylesheet">
 </head>
 <body>
