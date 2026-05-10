@@ -80,8 +80,8 @@ $avail_q->close();
 $mine = $conn->prepare(" SELECT e.course_id, c.course_name, CONCAT(f.first_name, ' ', f.last_name) AS instructor, e.semester
                          FROM enrollments e
                          JOIN courses c ON c.course_id = e.course_id
-                         LEFT JOIN courses fc ON fc.course_id = c.course_id
-                         LEFT JOIN faculty f ON f.faculty_id = fc.faculty_id
+                         LEFT JOIN class_schedules cs ON cs.course_id = c.course_id
+                         LEFT JOIN faculty f ON f.faculty_id = cs.faculty_id
                          WHERE e.student_id = ?
                          ORDER BY c.course_name");
 
