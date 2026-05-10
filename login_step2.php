@@ -24,7 +24,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt->execute();
         $result = $stmt->get_result();
         $user = $result->fetch_assoc();
-        $APP_BASE = '/smart_cloud_system';
+        $APP_BASE = '';
 
         if ($user && $password === $user['password']) {
             // redirect to portal
